@@ -172,8 +172,7 @@ namespace ShimDBA
                     var bytes = bin.Bytes;
                     richTextBox1.Text = " ";
                     var sw = new StringWriter();
-                    sw.WriteLine(@"{\rtf1\ansi\deff0\nouicompat{\fonttbl{\f0\fnil Microsoft Sans Serif;}}");
-                    sw.Write(@"\pard\f0\fs17 ");
+                    sw.Write(@"{\rtf1 ");
                     for (var i = 0; i < bytes.Length; i += 12) {
                         string key;
                         switch (keyType.GetTagType()) {

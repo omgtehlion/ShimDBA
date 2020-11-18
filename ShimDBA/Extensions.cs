@@ -27,6 +27,10 @@ namespace ShimDBA
                 lst.RemoveRange(count, lst.Count - count);
         }
         public static SdbFile.TagType GetTagType(this SdbFile.TagValue tag) => (SdbFile.TagType)((uint)tag & 0xF000);
-        public static string TagName(this ISdbEntry tag) => tag.TypeId.ToString().Substring(4);
+        public static string TagName(this ISdbEntry tag)
+        {
+            var res = tag.TypeId.ToString();
+            return res.StartsWith("TAG_") ? res.Substring(4) : "#" + res;
+        }
     }
 }
