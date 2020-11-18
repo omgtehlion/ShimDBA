@@ -28,13 +28,7 @@
     <EmbeddedResource Remove="obj\**" />
     <None Remove="icons\**" />
     <None Remove="obj\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Parent Include="..\SDB\SDB\**\*.cs" />
-    <Compile Include="@(Parent)">
-      <Link>SDB\%(RecursiveDir)%(Filename)%(Extension)</Link>
-    </Compile>
+    <Compile Include="..\SDB\SDB\**\*.cs" Link="SDB\%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Remove="..\SDB\SDB\Properties\*.cs" />
   </ItemGroup>
 
