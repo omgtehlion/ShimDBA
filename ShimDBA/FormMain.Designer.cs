@@ -33,14 +33,19 @@ namespace ShimDBA
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusLabelTag = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusLabelPath = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
             this.treeView1 = new ShimDBA.BufferedTreeView();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -69,10 +74,13 @@ namespace ShimDBA
             // menuStrip1
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Window;
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
             this.menuStrip1.Size = new System.Drawing.Size(1059, 24);
             this.menuStrip1.TabIndex = 2;
             this.menuStrip1.Text = "menuStrip1";
@@ -80,29 +88,75 @@ namespace ShimDBA
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openToolStripMenuItem,
+            this.closeToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
             // 
+            // openToolStripMenuItem
+            // 
+            this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.openToolStripMenuItem.Text = "&Open...";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // closeToolStripMenuItem
+            // 
+            this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.closeToolStripMenuItem.Text = "&Close";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "&Help";
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Text = "&About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripStatusLabel2});
+            this.statusLabelTag,
+            this.statusLabelPath});
             this.statusStrip1.Location = new System.Drawing.Point(0, 639);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.ShowItemToolTips = true;
             this.statusStrip1.Size = new System.Drawing.Size(1059, 24);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusLabelTag
+            // 
+            this.statusLabelTag.Name = "statusLabelTag";
+            this.statusLabelTag.Size = new System.Drawing.Size(85, 19);
+            this.statusLabelTag.Text = "statusLabelTag";
+            this.statusLabelTag.ToolTipText = "Tag offset in the file";
+            // 
+            // statusLabelPath
+            // 
+            this.statusLabelPath.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.statusLabelPath.Name = "statusLabelPath";
+            this.statusLabelPath.Size = new System.Drawing.Size(94, 19);
+            this.statusLabelPath.Text = "statusLabelPath";
+            this.statusLabelPath.ToolTipText = "Database file";
             // 
             // panel1
             // 
@@ -136,34 +190,24 @@ namespace ShimDBA
             this.splitter1.TabIndex = 4;
             this.splitter1.TabStop = false;
             // 
-            // toolStripStatusLabel1
-            // 
-            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(122, 19);
-            this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.ToolTipText = "Database file";
-            // 
-            // toolStripStatusLabel2
-            // 
-            this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(118, 19);
-            this.toolStripStatusLabel2.Text = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.ToolTipText = "Tag offset in the file";
-            // 
             // treeView1
             // 
             this.treeView1.Dock = System.Windows.Forms.DockStyle.Left;
             this.treeView1.ImageIndex = 0;
             this.treeView1.ImageList = this.imageList1;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
-            this.treeView1.Margin = new System.Windows.Forms.Padding(2);
+            this.treeView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.treeView1.Name = "treeView1";
             this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(343, 615);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView1_BeforeExpand);
             this.treeView1.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterSelect);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.DefaultExt = "sdb";
+            this.openFileDialog1.Filter = "SDB files|*.sdb|All files|*.*";
             // 
             // FormMain
             // 
@@ -175,7 +219,8 @@ namespace ShimDBA
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Margin = new System.Windows.Forms.Padding(2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.MinimumSize = new System.Drawing.Size(304, 251);
             this.Name = "FormMain";
             this.Text = "ShimDBA v0.1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -202,8 +247,13 @@ namespace ShimDBA
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel2;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelPath;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabelTag;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }
 

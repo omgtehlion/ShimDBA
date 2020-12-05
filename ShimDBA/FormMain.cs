@@ -21,6 +21,8 @@ namespace ShimDBA
         public FormMain()
         {
             InitializeComponent();
+            statusLabelPath.Text = "";
+            statusLabelTag.Text = "";
             WireControl(this);
             Icon = Icon.ExtractAssociatedIcon(Assembly.GetEntryAssembly().Location);
         }
@@ -42,6 +44,12 @@ namespace ShimDBA
 
         void LoadSDB(string fn)
         {
+            foreach (TreeNode node in treeView1.Nodes)
+                if (node.Tag is SdbView sv1 && sv1.File.SourceFile == fn) {
+                    NavigateTo(node, false);
+                    return;
+                }
+
             var db = Sdb.LoadFile(fn);
             var sv = new SdbView(db);
             try {
@@ -161,11 +169,11 @@ namespace ShimDBA
 
             var db = GetCurrentDb();
             if (db != null && db.Tag is SdbView dsv)
-                toolStripStatusLabel1.Text = Path.GetFileName(dsv.File.SourceFile);
+                statusLabelPath.Text = dsv.File.SourceFile;
             else
-                toolStripStatusLabel1.Text = "";
+                statusLabelPath.Text = "";
 
-            toolStripStatusLabel2.Text = "";
+            statusLabelTag.Text = "";
             if (tag is SdbEntryBinary bin) {
                 if (bin.TypeId == TAG_INDEX_BITS && e.Node.Parent.Tag is SdbEntryList parent) {
                     var keyType = parent.Child<SdbEntryWord>(TAG_INDEX_KEY).AsTag();
@@ -192,7 +200,7 @@ namespace ShimDBA
                     sw.WriteLine("}");
                     var myRtf = sw.ToString();
                     richTextBox1.Rtf = myRtf;
-                    toolStripStatusLabel2.Text = $"0x{bin.Offset:X}";
+                    statusLabelTag.Text = $"0x{bin.Offset:X}";
                     return;
                 } else if (bin.TypeId == TAG_PATCH_BITS) {
                     var bytes = bin.Bytes;
@@ -221,7 +229,7 @@ namespace ShimDBA
                         i += actionSize;
                     }
                     richTextBox1.Text = sw.ToString();
-                    toolStripStatusLabel2.Text = $"0x{bin.Offset:X}";
+                    statusLabelTag.Text = $"0x{bin.Offset:X}";
                     return;
                 }
             } else if (tag is ISdbEntry entry) {
@@ -229,7 +237,7 @@ namespace ShimDBA
                     richTextBox1.Text = "";
                 else
                     richTextBox1.Text = DumpTags(entry);
-                toolStripStatusLabel2.Text = $"0x{entry.Offset:X}";
+                statusLabelTag.Text = $"0x{entry.Offset:X}";
             } else if (tag is SdbView sv) {
                 var metadata = new[] {
                     $"FileName: {sv.File.SourceFile}",
@@ -244,10 +252,10 @@ namespace ShimDBA
                 richTextBox1.Text = $"AppName: {app.Name}\r\nAppID: {app.Id}";
             } else if (tag is SdbViewExe exe) {
                 richTextBox1.Text = DumpTags(exe.Tag);
-                toolStripStatusLabel2.Text = $"0x{exe.Tag.Offset:X}";
+                statusLabelTag.Text = $"0x{exe.Tag.Offset:X}";
             } else if (tag is SdbViewFix fix) {
                 richTextBox1.Text = DumpTags(fix.Tag);
-                toolStripStatusLabel2.Text = $"0x{fix.Tag.Offset:X}";
+                statusLabelTag.Text = $"0x{fix.Tag.Offset:X}";
             } else {
                 richTextBox1.Text = "";
             }
@@ -369,6 +377,24 @@ namespace ShimDBA
                 if (ignoreHistory)
                     NavInProgress = false;
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/omgtehlion/ShimDBA");
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                LoadSDB(openFileDialog1.FileName);
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var db = GetCurrentDb();
+            if (db != null && db.Tag is SdbView)
+                db.Remove();
         }
     }
 }
